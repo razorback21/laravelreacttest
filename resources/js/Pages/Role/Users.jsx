@@ -6,7 +6,7 @@ export default function Users({ roles }) {
     console.log(roles);
 
     return (
-        <Layout title="Users">
+        <Layout title="Role Users">
             <div className="bg-white p-5 rounded-md w-full">
                 {roles?.map((role) => (
                     <div key={role.id} className="mb-5">
