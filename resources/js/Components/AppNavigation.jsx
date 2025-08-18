@@ -33,6 +33,11 @@ export default function AppNavigation() {
                                 Create User
                             </Link>
                         </li>
+                        <li>
+                            <Link href={route("roles.users")}>
+                                List of users by roles
+                            </Link>
+                        </li>
                     </ul>
                 </div>
             </div>
