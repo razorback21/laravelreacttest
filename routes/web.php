@@ -18,6 +18,6 @@ use Inertia\Inertia;
 */
 
 Route::resource('users', UserController::class);
-Route::get('/', HomeController::class);
+Route::get('/', HomeController::class)->name('home');
 
 require __DIR__ . '/auth.php';
