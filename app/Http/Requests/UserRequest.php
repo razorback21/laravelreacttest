@@ -31,13 +31,4 @@ class UserRequest extends FormRequest
             'password' => 'required|string|min:8|max:255',
         ];
     }
-
-    public function prepareForValidation()
-    {
-        if ($this->password) {
-            $this->merge([
-                'password' => bcrypt($this->password),
-            ]);
-        }
-    }
 }
