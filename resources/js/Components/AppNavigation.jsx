@@ -26,10 +26,12 @@ export default function AppNavigation() {
                         className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                     >
                         <li>
-                            <Link href={route("users.index")}>Users</Link>
+                            <Link href={route("users.index")}>User List</Link>
                         </li>
                         <li>
-                            <Link href={route("users.create")}>Users</Link>
+                            <Link href={route("users.create")}>
+                                Create User
+                            </Link>
                         </li>
                     </ul>
                 </div>
