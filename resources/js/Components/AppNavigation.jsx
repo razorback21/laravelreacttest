@@ -49,8 +49,8 @@ export default function AppNavigation() {
                     Laravel 8 & React Project
                 </Link>
             </div>
-            <div className="navbar-end visible:hidden">
-                <button className="btn btn-ghost btn-circle">
+            <div className="navbar-end">
+                <button className="btn btn-ghost btn-circle hidden">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5"
@@ -66,7 +66,7 @@ export default function AppNavigation() {
                         />
                     </svg>
                 </button>
-                <button className="btn btn-ghost btn-circle">
+                <button className="btn btn-ghost btn-circle hidden">
                     <div className="indicator">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
