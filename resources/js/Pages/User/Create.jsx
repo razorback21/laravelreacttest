@@ -1,49 +1,293 @@
-import { userRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Layout from "@/Layouts/Layout";
+import axios from "axios";
+import { Inertia } from "@inertiajs/inertia";
 
-export default function Create() {
+// Todo: Refactor make this componnet reusable
+function MultiSelect({
+    options,
+    selectedValues,
+    onChange,
+    placeholder = "Select options",
+}) {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setIsOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleOptionClick = (value) => {
+        if (selectedValues.includes(value)) {
+            // Remove if already selected
+            onChange(selectedValues.filter((v) => v !== value));
+        } else {
+            // Add if not selected
+            onChange([...selectedValues, value]);
+        }
+    };
+
+    const removeOption = (value) => {
+        onChange(selectedValues.filter((v) => v !== value));
+    };
+
+    const getOptionLabel = (value) => {
+        const option = options.find((opt) => opt.value === value);
+        return option ? option.label : value;
+    };
+
+    return (
+        <div className="relative" ref={dropdownRef}>
+            {/* Selected tags */}
+            {selectedValues.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {selectedValues.map((value) => (
+                        <div
+                            key={value}
+                            className="badge badge-primary gap-2 py-3 px-3"
+                        >
+                            <span className="text-sm font-medium">
+                                {getOptionLabel(value)}
+                            </span>
+                            <button
+                                type="button"
+                                onClick={() => removeOption(value)}
+                                className="btn btn-ghost btn-circle btn-xs ml-1 hover:bg-primary-focus hover:text-primary-content transition-colors"
+                                aria-label={`Remove ${getOptionLabel(value)}`}
+                            >
+                                <svg
+                                    className="w-3 h-3"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Dropdown trigger */}
+            <div
+                className={`select select-bordered w-full cursor-pointer flex items-center justify-between transition-all duration-200 hover:border-primary focus-within:border-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-opacity-20 ${
+                    isOpen
+                        ? "border-primary ring-2 ring-primary ring-opacity-20"
+                        : ""
+                }`}
+                onClick={() => setIsOpen(!isOpen)}
+                tabIndex={0}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        setIsOpen(!isOpen);
+                    }
+                }}
+            >
+                <span
+                    className={`text-sm ${
+                        selectedValues.length === 0
+                            ? "text-base-content/50"
+                            : "text-base-content font-medium"
+                    }`}
+                >
+                    {selectedValues.length === 0
+                        ? placeholder
+                        : `${selectedValues.length} role${
+                              selectedValues.length !== 1 ? "s" : ""
+                          } selected`}
+                </span>
+                <svg
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                        isOpen ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                    />
+                </svg>
+            </div>
+
+            {/* Dropdown options */}
+            {isOpen && (
+                <div className="absolute z-50 w-full mt-2 bg-base-100 border border-base-300 rounded-box shadow-lg max-h-60 overflow-y-auto">
+                    <div className="py-1">
+                        {options.map((option) => (
+                            <div
+                                key={option.value}
+                                className={`px-4 py-3 cursor-pointer transition-colors duration-150 flex items-center justify-between hover:bg-base-200 ${
+                                    selectedValues.includes(option.value)
+                                        ? "bg-primary/10 text-primary border-l-4 border-primary"
+                                        : "text-base-content"
+                                }`}
+                                onClick={() => handleOptionClick(option.value)}
+                            >
+                                <span className="text-sm font-medium">
+                                    {option.label}
+                                </span>
+                                {selectedValues.includes(option.value) && (
+                                    <div className="badge badge-primary badge-sm">
+                                        <svg
+                                            className="w-3 h-3"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default function Create({ roles }) {
+    const [selectedRoles, setSelectedRoles] = useState([]);
+    const formDateRef = useRef({
+        name: "",
+        email: "",
+        roles: [],
+        password: "12345678",
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Selected roles:", selectedRoles);
+
+        // We will use axios to submit he form data as it is required in the Exam.
+        axios
+            .post(route("users.store"), {
+                ...formDateRef.current,
+                roles: selectedRoles,
+            })
+            .then((res) => {
+                console.log(res);
+                if (res.status === 201) {
+                    // redirect using Inertia.visit() method
+                    Inertia.visit(route("users.index"));
+                }
+            });
+    };
+
+    function handleInputChange(e) {
+        const { name, value } = e.target;
+        formDateRef.current[name] = value;
+    }
+
     return (
         <Layout title="Create User">
-            <h1 className="font-bold mb-5">Create User</h1>
-            <form className="form-control w-full">
-                <div className="mb-2">
-                    <label className="label">
-                        <span className="label-text">Fullname</span>
-                    </label>
-                    <input
-                        type="text"
-                        name=""
-                        placeholder="Enter fullname"
-                        class="input input-bordered w-full"
-                    />
+            <div className="max-w-2xl mx-auto">
+                <div className="card bg-base-100 shadow-xl">
+                    <div className="card-body">
+                        <h1 className="card-title text-2xl font-bold mb-6">
+                            Create New User
+                        </h1>
+                        <form className="space-y-6" onSubmit={handleSubmit}>
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text font-medium">
+                                        Full Name *
+                                    </span>
+                                </label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    placeholder="Enter full name"
+                                    className="input input-bordered w-full focus:input-primary"
+                                    required
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text font-medium">
+                                        Email Address *
+                                    </span>
+                                </label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Enter email address"
+                                    className="input input-bordered w-full focus:input-primary"
+                                    required
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+                            <div className="form-control">
+                                <label className="label">
+                                    <span className="label-text font-medium">
+                                        User Roles *
+                                    </span>
+                                </label>
+                                <MultiSelect
+                                    options={roles}
+                                    selectedValues={selectedRoles}
+                                    onChange={setSelectedRoles}
+                                    placeholder="Select user roles"
+                                    required
+                                />
+                            </div>
+
+                            <div className="form-control pt-4">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary w-full"
+                                >
+                                    <svg
+                                        className="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                        />
+                                    </svg>
+                                    Create User
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div className="mb-2">
-                    <label className="label">
-                        <span className="label-text">Email</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="email"
-                        placeholder="Enter email"
-                        class="input input-bordered w-full"
-                    />
-                </div>
-                <div className="mb-8">
-                    <label className="label">
-                        <span className="label-text">Roles</span>
-                    </label>
-                    <select className="select select-bordered w-full" multiple>
-                        <option disabled selected>
-                            Select roles
-                        </option>
-                        <option>Han Solo</option>
-                        <option>Greedo</option>
-                    </select>
-                </div>
-                <div>
-                    <button className="btn btn-neutral w-full">submit</button>
-                </div>
-            </form>
+            </div>
         </Layout>
     );
 }
