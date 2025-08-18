@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 class UserController extends Controller
@@ -18,7 +21,7 @@ class UserController extends Controller
      */
     public function index(): Response
     {
-        $users = User::all();
+        $users = User::with('roles')->get()->values()->toArray();
         return Inertia::render('User/Index', compact('users'));
     }
 
@@ -29,7 +32,13 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('User/Create');
+        $roles = Role::all()->map(function ($role) {
+            return [
+                'value' => $role->id,
+                'label' => $role->name,
+            ];
+        })->values();
+        return Inertia::render('User/Create', compact('roles'));
     }
 
     /**
@@ -38,53 +47,16 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(UserRequest $request)
+    public function store(UserRequest $request): JsonResponse
     {
-        //
-    }
+        $validated = $request->validated();
+        $user = User::create($validated);
+        $user->roles()->attach($validated['roles']);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UserRequest $request, User $user)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(User $user)
-    {
-        //
+        return response()->json([
+            'message' => 'User created successfully',
+            'user' => $user,
+            'status' => 'success'
+        ], 201);
     }
 }
