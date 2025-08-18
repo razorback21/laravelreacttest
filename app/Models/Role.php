@@ -10,4 +10,12 @@ class Role extends Model
         'code',
         'name',
     ];
+
+    /**
+     * Get the users associated with the role.
+     */
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
 }
