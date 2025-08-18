@@ -2,7 +2,7 @@ Installation instruction
 1. Clone the repository
 2. Run `composer install`
 3. Run `npm install`
-5. create an sqlite database.
+5. Create an sqlite database.
     - Run `touch database/database.sqlite`
     - Run `php artisan migrate`
     - Run `php artisan db:seed`
