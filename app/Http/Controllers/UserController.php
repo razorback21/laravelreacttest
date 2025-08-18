@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\RoleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,12 +33,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::all()->map(function ($role) {
-            return [
-                'value' => $role->id,
-                'label' => $role->name,
-            ];
-        })->values();
+        $roles = (new RoleService())->getRoleOptions();
         return Inertia::render('User/Create', compact('roles'));
     }
 
