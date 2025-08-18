@@ -9,7 +9,6 @@
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
     <!-- Scripts -->
     @routes
     <link href="{{ mix('css/app.css') }}?v={{ time() }}" rel="stylesheet">
@@ -18,7 +17,9 @@
 </head>
 
 <body class="font-sans antialiased">
-    @inertia
+    <div className="container mx-auto">
+        @inertia
+    </div>
 </body>
 
 </html>
