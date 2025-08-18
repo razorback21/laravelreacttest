@@ -14,7 +14,7 @@ export default function Users({ roles }) {
                         {role.users.length ? (
                             <UsersTable users={role.users} />
                         ) : (
-                            <p className="text-center text-sm bg-blue-200 border border-blue-300 mb-2 p-2 rounded-md text-blue-900">
+                            <p className="text-center text-sm bg-gray-100 border border-gray-300 mb-2 p-2 rounded-md text-gray-900">
                                 There are no users in this role
                             </p>
                         )}
