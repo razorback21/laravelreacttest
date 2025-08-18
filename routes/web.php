@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Models\Role;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,5 +18,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::resource('users', UserController::class);
 Route::get('/', HomeController::class)->name('home');
+Route::get('/role/users', function () {
+    $roles = Role::with('users')->get()->values();
+    return Inertia::render('Role/Users', compact('roles'));
+})->name('roles.users');
 
 require __DIR__ . '/auth.php';
