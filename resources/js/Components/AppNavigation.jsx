@@ -41,7 +41,7 @@ export default function AppNavigation() {
                     href={route("home")}
                     className="btn btn-ghost normal-case text-xl"
                 >
-                    Laravel 8 React
+                    Laravel 8 & React Project
                 </Link>
             </div>
             <div className="navbar-end visible:hidden">
