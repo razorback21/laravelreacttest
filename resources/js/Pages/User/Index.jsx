@@ -3,7 +3,7 @@ import UsersTable from "./UsersTable";
 import { Link } from "@inertiajs/inertia-react";
 
 export default function Index({ users }) {
-    console.log(users);
+    console.log("asas", users);
     return (
         <Layout title="Users">
             <h1 className="font-bold mb-5">Users</h1>
