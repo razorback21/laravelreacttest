@@ -13,7 +13,7 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,20 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email',
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,id',
+            'password' => 'required|string|min:8|max:255',
         ];
+    }
+
+    public function prepareForValidation()
+    {
+        if ($this->password) {
+            $this->merge([
+                'password' => bcrypt($this->password),
+            ]);
+        }
     }
 }
