@@ -13,7 +13,9 @@ export default function UsersTable({ users }) {
                     <tr key={user.id}>
                         <td>{user.id}</td>
                         <td>{user.email}</td>
-                        <td>{user.roles}</td>
+                        <td>
+                            {user.roles.map((role) => role.name).join(", ")}
+                        </td>
                     </tr>
                 ))}
             </tbody>
