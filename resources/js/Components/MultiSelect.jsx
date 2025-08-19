@@ -1,3 +1,5 @@
+import { useState, useEffect, useRef } from "react";
+
 export default function MultiSelect({
     options,
     selectedValues,
@@ -6,6 +8,7 @@ export default function MultiSelect({
 }) {
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (
