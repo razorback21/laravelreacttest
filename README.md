@@ -2,7 +2,7 @@ Installation instruction
 1. Clone the repository
 2. Run `composer install`
 3. Run `npm install`
-5. Create an sqlite database.
+5. Setup database.
     - update the database connection in `.env` file
     - DB_CONNECTION=sqlite
     - DB_DATABASE=[path_to_your_database_file/database.sqlite] 
