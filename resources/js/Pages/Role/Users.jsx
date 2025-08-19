@@ -1,10 +1,7 @@
 import Layout from "@/Layouts/Layout";
 import UsersTable from "./UsersTable";
-import { Link } from "@inertiajs/inertia-react";
 
 export default function Users({ roles }) {
-    console.log(roles);
-
     return (
         <Layout title="Role Users">
             <div className="bg-white p-5 rounded-md w-full">
