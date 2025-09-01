@@ -17,7 +17,7 @@ use Inertia\Inertia;
 */
 
 Route::resource('users', UserController::class);
-Route::get('/', HomeController::class)->name('home');
+Route::redirect('/', route('users.index'));
 Route::get('/role/users', function () {
     $roles = Role::with('users')->get()->values();
     return Inertia::render('Role/Users', compact('roles'));

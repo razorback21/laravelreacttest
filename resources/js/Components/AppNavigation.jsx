@@ -43,7 +43,7 @@ export default function AppNavigation() {
             </div>
             <div className="navbar-center">
                 <Link
-                    href={route("home")}
+                    href={route("users.index")}
                     className="btn btn-ghost normal-case text-xl"
                 >
                     Laravel React Project
