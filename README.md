@@ -1,6 +1,6 @@
 Installation instruction
 
-NOTES: if you encounter issues with inertia version 0.5.4 not working with php 8.2, update composer to 
+NOTES: if you encounter issues with inertia version 0.5.4 not working with php 8.2, update inertia in composer.json to 
 "inertiajs/inertia-laravel": "^1.3"
 
 1. Clone the repository
