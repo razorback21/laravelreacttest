@@ -1,4 +1,8 @@
 Installation instruction
+
+NOTES: if you encounter issues with inertia version 0.5.4 not working working with php 8.2, update composer to 
+"inertiajs/inertia-laravel": "^1.3"
+
 1. Clone the repository
 2. Run `composer install`
 3. Run `npm install`
@@ -13,3 +17,5 @@ Installation instruction
 6. Run `npm run dev`
 7. Run `php artisan serve`
 8. Go to `http://localhost:8000 or http://127.0.0.1:8000`
+
+
